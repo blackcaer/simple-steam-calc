@@ -139,7 +139,7 @@ class MainWindow(ttk.Frame):
 
         self.changeLabel("Sell Price: ","Buy Price: ","Profit:","Profit %: ","Not-lose price: ","Sell price for 20% profit: ","Sell price for 50% profit: ")
 
-        
+         
 
     def handleWriteEvent(self,text_after,name,index,mode):
         print("handle",text_after.get(),name,index,mode)
