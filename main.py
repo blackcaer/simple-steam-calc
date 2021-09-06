@@ -130,9 +130,10 @@ class MainWindow(ttk.Frame):
         for i in range(2,7):                        # only for those rows
             self.gridMatrix[i][0]["anchor"]="e" 
         
-        for entry in self.entries.values():
+        for entrykey in self.entries:
+            entry = self.entries[entrykey]
             print(entry,type(entry))
-            entry["StringVar"] = tk.StringVar()
+            entry["StringVar"] = tk.StringVar(name=str(entrykey),)
             entry["widget"]["textvariable"] = entry["StringVar"]
             entry["StringVar"].trace_add("write",lambda name, index, mode, text_after = entry["StringVar"]: self.handleWriteEvent(text_after,name,index,mode))
 
