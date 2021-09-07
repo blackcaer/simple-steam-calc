@@ -10,7 +10,7 @@ class MainWindow(ttk.Frame):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
 
-        self.eventHandler = Handler()
+        self.eventHandler = Handler(self)
         
         # Configuring rows & columns weight (for parent and for this main window)
         self.parent.grid_columnconfigure(0, weight=1)
@@ -170,15 +170,15 @@ class MainWindow(ttk.Frame):
 
 
 #try:
-    if __name__ ==  "__main__" : 
-        mainwindows_args = {}
-        root = tk.Tk()
-        root.resizable(1, 1)
-        """ root.geometry("260x270") """
-        # root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='./img/calc_icon.png')) #setting icon
-        root.title("Steam profit calculator")
-        MainWindow(root, **mainwindows_args)
-        root.mainloop() 
+if __name__ ==  "__main__" : 
+    mainwindows_args = {}
+    root = tk.Tk()
+    root.resizable(1, 1)
+    """ root.geometry("260x270") """
+    # root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='./img/calc_icon.png')) #setting icon
+    root.title("Steam profit calculator")
+    MainWindow(root, **mainwindows_args)
+    root.mainloop() 
 
 #except Exception as e:
 #    print(e)
