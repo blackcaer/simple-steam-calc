@@ -1,6 +1,3 @@
-
-
-
 class SteamProfitCalculator:
     default_fee = 1.15
 
@@ -51,7 +48,3 @@ class SteamProfitCalculator:
             return self._beforeReturn((profit+buy)*fee)
 
         return False
-        
-
-
-

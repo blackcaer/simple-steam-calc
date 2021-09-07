@@ -1,11 +1,16 @@
 import tkinter as tk
 from ttkbootstrap import Style as StyleBs
 import tkinter.ttk as ttk
+from HandlingEntryInput import Handler #Calculate
 
 class MainWindow(ttk.Frame):
+    eventHandler : Handler = None
+
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
+
+        self.eventHandler = Handler()
         
         # Configuring rows & columns weight (for parent and for this main window)
         self.parent.grid_columnconfigure(0, weight=1)
@@ -132,23 +137,18 @@ class MainWindow(ttk.Frame):
         
         for entrykey in self.entries:
             entry = self.entries[entrykey]
-            print(entry,type(entry))
             entry["StringVar"] = tk.StringVar(name=str(entrykey),)
             entry["widget"]["textvariable"] = entry["StringVar"]
-            entry["StringVar"].trace_add("write",lambda name, index, mode, text_after = entry["StringVar"]: self.handleWriteEvent(text_after,name,index,mode))
+            entry["StringVar"].trace_add("write",lambda name, index, mode, text_after = entry["StringVar"]: self.eventHandler.handleEntryChange(text_after,name,index,mode))
 
 
         self.changeLabel("Sell Price: ","Buy Price: ","Profit:","Profit %: ","Not-lose price: ","Sell price for 20% profit: ","Sell price for 50% profit: ")
 
-         
 
-    def handleWriteEvent(self,text_after,name,index,mode):
-        print("handle",text_after.get(),name,index,mode)
-
+#    def handleWriteEvent(self,text_after,name,index,mode):
+#        print("handle",text_after.get(),name,index,mode)
         
-
-
-
+        
         
 
     def changeLabel(self, sp = None, bp = None, profit = None, profpc = None, minsprofit = None, s20pc = None, s50pc = None):
@@ -169,7 +169,7 @@ class MainWindow(ttk.Frame):
 
 
 
-try:
+#try:
     if __name__ ==  "__main__" : 
         mainwindows_args = {}
         root = tk.Tk()
@@ -180,15 +180,5 @@ try:
         MainWindow(root, **mainwindows_args)
         root.mainloop() 
 
-except Exception as e:
-    print(e)
-""" 
-def callback(x):
-   content= x.get()
-   Label(win, text=content).pack()
-
-#Create an variable to store the user-input
-var = StringVar()
-var.trace("w", lambda name, index,mode, var=var: callback(var))
-#Create an Entry widget
-e = Entry(win, textvariable=var) """
+#except Exception as e:
+#    print(e)
