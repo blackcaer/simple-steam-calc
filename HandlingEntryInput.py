@@ -31,7 +31,7 @@ class Handler:
 
         # 1 - profit
         if self.getStrVar("sellp") != "" and self.getStrVar("buyp") != "":
-            self.do_actions(self.calculate.profit (sellp = self.getStrVar("sellp"),buy = self.getStrVar("buyp")),mode = "sellp")
+            self.do_actions(self.calculate.profit (sellp = self.getStrVar("sellp"),buy = self.getStrVar("buyp"),mode = "sellp"))
 
         # 3 - profitpc  
         if self.getStrVar("profit") != "" and self.getStrVar("buyp") != "":
@@ -50,7 +50,7 @@ class Handler:
     def getStrVar(self,name):
         return self._r.entries[name]["StringVar"].get()
     
-    def do_actions():
+    def do_actions(*args):
         pass
 
     

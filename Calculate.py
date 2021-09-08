@@ -2,18 +2,24 @@ class SteamProfitCalculator:
     FEE = 1.15
     ROUNDTO = 3
 
-    
     def __init__(self):
         pass
 
     def _beforeReturn(self,x):
         return round(x,self.ROUNDTO)
 
-    def _isNumber(self, *args):
+
+    def _isValid(self, *args):
         for arg in args:
             if not isinstance(arg,(int,float)) and arg != None:
                 return False
         return True
+
+
+    def count_notlose(self,buy,fee=FEE):
+        if buy!=None and fee != None and self._isValid(buy,fee):
+            return buy*fee
+        return False
 
 
     def profit(self,*,sellp=None,fee=FEE,buy=None,profitpc=None,mode="sellp"):
@@ -21,7 +27,7 @@ class SteamProfitCalculator:
         mode: sellp/profitpc def: sellp
         """
 
-        if mode=="sellp" and self._isNumber(sellp,fee,buy):
+        if mode=="sellp" and self._isValid(sellp,fee,buy):
             return self._beforeReturn(sellp/fee - buy)
 
         return False
@@ -32,7 +38,7 @@ class SteamProfitCalculator:
         mode: sellp/profit def: profit
         """
 
-        if mode=="profit" and self._isNumber(profit,buy):
+        if mode=="profit" and self._isValid(profit,buy):
             return self._beforeReturn(profit/buy)
         
         return False
@@ -45,13 +51,10 @@ class SteamProfitCalculator:
 
         notlose = self.count_notlose(buy,fee)
 
-        if mode == "profitpc" and self._isNumber(profitpc,notlose,fee):
+        if mode == "profitpc" and self._isValid(profitpc,notlose,fee):
             return self._beforeReturn((profitpc+1)*notlose)
-        elif mode == "profit" and self._isNumber(buy,profit,fee):
+        elif mode == "profit" and self._isValid(buy,profit,fee):
             return self._beforeReturn((profit+buy)*fee)
 
         return False
-
-    def count_notlose(buy,fee=FEE):
-        if (fee and buy) or (buy==0 and fee):
-            return buy*fee
+        
