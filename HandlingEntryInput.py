@@ -29,7 +29,7 @@ class Handler:
         self.last_entry_name = name
         self.getStrVar(name)==""
 
-        # 1 - profit
+        # 1 - profit 
         if self.getStrVar("sellp") != "" and self.getStrVar("buyp") != "":
             self.do_actions(self.calculate.profit (sellp = self.getStrVar("sellp"),buy = self.getStrVar("buyp"),mode = "sellp"))
 
