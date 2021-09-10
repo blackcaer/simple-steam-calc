@@ -9,8 +9,8 @@ class MainWindow(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
-
         self.eventHandler = Handler(self)
+        
         
         # Configuring rows & columns weight (for parent and for this main window)
         self.parent.grid_columnconfigure(0, weight=1)
@@ -140,7 +140,7 @@ class MainWindow(ttk.Frame):
             entry["StringVar"] = tk.StringVar(name=str(entrykey),)
             entry["widget"]["textvariable"] = entry["StringVar"]
             entry["StringVar"].trace_add("write",lambda name, index, mode, text_after = entry["StringVar"]: self.eventHandler.handleEntryChange(text_after,name,index,mode))
-
+        
 
         self.changeLabel("Sell Price: ","Buy Price: ","Profit:","Profit %: ","Not-lose price: ","Sell price for 20% profit: ","Sell price for 50% profit: ")
 
