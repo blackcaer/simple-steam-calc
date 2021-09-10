@@ -42,9 +42,7 @@ class Handler:
     last_entry_name : str = None
     _r = None    # root, MainWindow
 
-    handling_flag = False
-
-    
+    handling_flag = False 
 
     def __init__(self,root):
         if root == None:
@@ -79,7 +77,6 @@ class Handler:
 
 
     def calculate_entries(self):
-        pass
     # ify sprawdzajace co mozna obliczyc
 
         """ txtab = {
@@ -113,9 +110,9 @@ class Handler:
                     self._set("sell450pc",val) 
                 else:
                     self._set("sell450pc",0)
-
+                    
             elif not self.checked_entries.contains("sellp") and not self.updated_entries.contains("sellp"):    # in sellp not calculated and can do that, do this
-                val = self.calculate.sellp(profitpc = self.getStrVar("profitpc"), buyp = self.setStrVar("buyp"), mode = "profitpc")
+                val = self.calculate.sellp(profitpc = self.getStrVar("profitpc"), buyp = self.getStrVar("buyp"), mode = "profitpc")
                 if not val:
                     val = self.calculate.sellp(profit = self.getStrVar("profit"), buyp = self.getStrVar("buyp"), mode = "profit")
                 if val:

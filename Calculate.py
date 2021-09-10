@@ -11,9 +11,18 @@ class SteamProfitCalculator:
 
     def _isValid(self, *args):
         for arg in args:
-            if not isinstance(arg,(int,float)) and arg != None:
+             
+            try:
+                arg = float(arg)
+            except ValueError:
                 return False
-        return True
+            except Exception:
+                print("WARNING: UNKNOWN ERROR")
+                return False
+            
+            if isinstance(arg,float) or arg == None:
+                return True
+        return False
 
 
     def count_notlose(self,buyp,fee=FEE):
@@ -26,8 +35,9 @@ class SteamProfitCalculator:
         """  
         mode: sellp/profitpc def: sellp
         """
-
+        
         if mode=="sellp" and self._isValid(sellp,fee,buyp):
+            
             return self._beforeReturn(sellp/fee - buyp)
 
         return False

@@ -144,6 +144,8 @@ class MainWindow(ttk.Frame):
 
         self.changeLabel("Sell Price: ","Buy Price: ","Profit:","Profit %: ","Not-lose price: ","Sell price for 20% profit: ","Sell price for 50% profit: ")
 
+        #self.entries["buyp"]["StringVar"].set("3")
+
 
     def changeLabel(self, sp = None, bp = None, profit = None, profpc = None, minsprofit = None, s20pc = None, s50pc = None):
         if sp != None:
