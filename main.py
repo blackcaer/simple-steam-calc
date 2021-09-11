@@ -4,8 +4,7 @@ import tkinter.ttk as ttk
 from HandlingEntryInput import Handler #Calculate
 
 class MainWindow(ttk.Frame):
-    eventHandler : Handler = None
-
+    
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
