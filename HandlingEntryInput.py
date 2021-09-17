@@ -12,9 +12,10 @@ self.entry_sell450pc
 """
 
 class ValuesTab:
-    FEE = 1.15
+    #FEE = 1.15
 
-    def __init__(self,init_tab = None):
+    def __init__(self,init_tab = None,):
+
         if type(init_tab) == list:
             self.tab = init_tab
         elif init_tab == None:
@@ -39,7 +40,9 @@ class ValuesTab:
 
 class Handler:
 
-    def __init__(self,root):
+    def __init__(self,root,roundto = 2, fee = 1.15):
+        self.roundto = roundto
+        self.FEE = fee
         if root == None:
             raise ValueError
         self.calculate = SteamProfitCalculator()
@@ -49,15 +52,18 @@ class Handler:
         self._r = root
         
 
-    def getStrVar(self,name):
+    def getEntryVal(self,name):
         return self._r.entries[name]["StringVar"].get()
     
-    def setStrVar(self,name,content = "",iffalse=False):
+    def setEntryVal(self,name,content = "",iffalse=False):
         """ 
-         """
-        if content == False:
-            self._r.entries[name]["StringVar"].set(iffalse)
-        self._r.entries[name]["StringVar"].set(content)
+        """
+
+        if content == False and content != "":
+            if iffalse != False:
+                self._r.entries[name]["StringVar"].set(iffalse)
+        else:
+            self._r.entries[name]["StringVar"].set(content)
 
     def do_actions(*args):
         pass 
@@ -81,48 +87,48 @@ class Handler:
         print(" ==== start ==== ")
         while True:
             if not self.checked_entries.contains("sellp") and not self.updated_entries.contains("sellp"):    # in sellp not calculated and can do that, do this
-                val = self.calculate.sellp(profitpc = self.getStrVar("profitpc"), buyp = self.getStrVar("buyp"), mode = "profitpc")
+                val = self.calculate.sellp(profitpc = self.getEntryVal("profitpc"), buyp = self.getEntryVal("buyp"), mode = "profitpc")
                 if not val or self.last_entry_name == "profit":     # if profit was inserted, calculating by the value of profitpc will be wrong, cause profitpc is calculated after sellp
-                    val = self.calculate.sellp(profit = self.getStrVar("profit"), buyp = self.getStrVar("buyp"), mode = "profit")
+                    val = self.calculate.sellp(profit = self.getEntryVal("profit"), buyp = self.getEntryVal("buyp"), mode = "profit")
                 if val:
                     self._set("sellp",val) 
                 else:
-                    self._set("sellp",0)
+                    self._mark("sellp")
 
             elif not self.checked_entries.contains("profit") and not self.updated_entries.contains("profit"):
-                val = self.calculate.profit(sellp = self.getStrVar("sellp"), buyp = self.getStrVar("buyp"))
+                val = self.calculate.profit(sellp = self.getEntryVal("sellp"), buyp = self.getEntryVal("buyp"))
                 if val:
                     self._set("profit",val) 
                 else:
-                    self._set("profit",0)
+                    self._mark("profit")
 
             elif not self.checked_entries.contains("profitpc") and not self.updated_entries.contains("profitpc"):
-                val = self.calculate.profitpc(buyp = self.getStrVar("buyp"), profit = self.getStrVar("profit"))
+                val = self.calculate.profitpc(buyp = self.getEntryVal("buyp"), profit = self.getEntryVal("profit"))
                 if val:
                     self._set("profitpc",val) 
                 else:
-                    self._set("profitpc",0)
+                    self._mark("profitpc")
            
             elif not self.checked_entries.contains("minsell4profit") and not self.updated_entries.contains("minsell4profit"):
-                val = self.calculate.count_notlose(buyp = self.getStrVar("buyp"))
+                val = self.calculate.count_notlose(buyp = self.getEntryVal("buyp"))
                 if val:
                     self._set("minsell4profit",val) 
                 else:
-                    self._set("minsell4profit",0)
+                    self._mark("minsell4profit")
 
             elif not self.checked_entries.contains("sell420pc") and not self.updated_entries.contains("sell420pc"):
-                val = self.calculate.exactprofitpc(percent = 20, buyp = self.getStrVar("buyp"))
+                val = self.calculate.exactprofitpc(percent = 20, buyp = self.getEntryVal("buyp"))
                 if val:
                     self._set("sell420pc",val) 
                 else:
-                    self._set("sell420pc",0)
+                    self._mark("sell420pc")
 
             elif not self.checked_entries.contains("sell450pc") and not self.updated_entries.contains("sell450pc"):
-                val = self.calculate.exactprofitpc(percent = 50, buyp = self.getStrVar("buyp"))
+                val = self.calculate.exactprofitpc(percent = 50, buyp = self.getEntryVal("buyp"))
                 if val:
                     self._set("sell450pc",val) 
                 else:
-                    self._set("sell450pc",0)
+                    self._mark("sell450pc")
 
             else:
                 self.checked_entries.clear()
@@ -131,22 +137,22 @@ class Handler:
                 break
 
     def _set(self,name,val):
-        if val != 0:                # TODO DELETE IT! TEST
-            print(" - ",name," - ",val)
-            self.setStrVar(name, val)
-            self.checked_entries.clear()
-            self.updated_entries.add(name)
+        print(" - ",name," - ",val)
+
+        if name == "profitpc":
+            val *= 100.0
+            val = str(round(val,self.roundto)) + '%'
+
+        if isinstance(val,(float,int)):
+            val = round(val,self.roundto)
+
+        self.setEntryVal(name, val)
+            
+        self.checked_entries.clear()
+        self.updated_entries.add(name)
+
+        self._mark(name)
+
+    def _mark(self,name):
         self.checked_entries.add(name)
         print("checked: ",name)
-        
-
-# garbage : 
-
-            #elif not self.checked_entries.contains("buyp") and not self.updated_entries.contains("buyp"):
-            #    val = self.calculate.buyp(profitpc = self.getStrVar("profitpc"), profit = self.getStrVar("profit"), mode="profit")
-            #    if not val:
-            #        val = self.calculate.profitpc(sellp = self.getStrVar("sellp"), profit = self.getStrVar("profit"), mode="sellp")
-            #    if val:
-            #        self._set("buyp",val) 
-            #    else:
-            #        self._set("buyp",0)

@@ -2,10 +2,10 @@ class SteamProfitCalculator:
 
     _DEFAULTFEE = 1.15
 
-    def __init__(self,fee = 1.15, roundto=3):
+    def __init__(self,fee = 1.15, ):#roundto=3):
         self.changeFee(fee)
-        if isinstance(roundto,int):
-            self.ROUNDTO = roundto
+        #if isinstance(roundto,int):
+        #    self.ROUNDTO = roundto
 
 
     def changeFee(self,newvalue):
@@ -16,7 +16,8 @@ class SteamProfitCalculator:
 
 
     def _beforeReturn(self,x):
-        return round(x,self.ROUNDTO)
+        #return round(x,self.ROUNDTO)
+        return x
 
 
     def _isValid(self, *args):

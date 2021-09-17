@@ -3,22 +3,29 @@ from ttkbootstrap import Style as StyleBs
 import tkinter.ttk as ttk
 from HandlingEntryInput import Handler #Calculate
 
+
 class MainWindow(ttk.Frame):
-    
+
+
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
         self.eventHandler = Handler(self)
         
+        self.VALIDCHARS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ",", ".")
+
+        self._vcmd = (self.parent.register(self.onvalidate), self.VALIDCHARS, '%S', '%P')
+
+        self.style = StyleBs("darkly")
+        self.style.configure('TButton', font=('Helvetica', 13), width = 6, heigth = 3,)
         
         # Configuring rows & columns weight (for parent and for this main window)
         self.parent.grid_columnconfigure(0, weight=1)
         self.parent.grid_rowconfigure(0, weight=1)
 
         # Placing main frame
-        self.grid(row=0,column=0, sticky = "nsew")
-
-        self.entry_sellprice = ttk.Entry(self)
+        self.grid(row=0,column=0, sticky = "nsew") 
+        self.entry_sellprice = ttk.Entry(self,validatecommand=self._vcmd)
         self.entry_buyprice = ttk.Entry(self)
         self.entry_profit = ttk.Entry(self)
         self.entry_profitpercent = ttk.Entry(self)
@@ -37,7 +44,6 @@ class MainWindow(ttk.Frame):
         self.labels = {
             "sellp" : { 
                 "widget" : self.label_sellprice,
-                #"StringVar" :
                 },
 
             "buyp" : { 
@@ -136,6 +142,7 @@ class MainWindow(ttk.Frame):
         
         for entrykey in self.entries:
             entry = self.entries[entrykey]
+            #entry["widget"]["validatecommand"] = self._vcmd
             entry["StringVar"] = tk.StringVar(name=str(entrykey),)
             entry["widget"]["textvariable"] = entry["StringVar"]
             entry["StringVar"].trace_add("write",lambda name, index, mode, text_after = entry["StringVar"]: self.eventHandler.handleEntryChange(text_after,name,index,mode))
@@ -161,7 +168,31 @@ class MainWindow(ttk.Frame):
             self.label_sell420pc["text"] = s20pc
         if s50pc  != None:
             self.label_sell450pc["text"] = s50pc
+    
+    def onvalidate(self, validchars, chars_to_validate, after_change, symbol_limit = False, dont_count = ('.'), dot = ".") : 
+        print("WORKING")
+        is_dot_in_string = False
+        for char in chars_to_validate : 
+            if char not in validchars : 
+                # there is an invalid character in the input; don't allow it.
+                return False 
+        dont_count_symbols = 0
+        for ch in after_change:
+            
+            if ch == dot:       
+                # There can be only one dot in entry
+                if is_dot_in_string:
+                    return False
+                else:
+                    is_dot_in_string = True
 
+            if ch in dont_count:
+                dont_count_symbols += 1
+
+        if symbol_limit not in (False,None):
+            if len(after_change)-dont_count_symbols > symbol_limit:   
+                return False
+        return True     
 
 #try:
 if __name__ ==  "__main__" : 
