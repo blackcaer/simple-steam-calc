@@ -6,7 +6,6 @@ from HandlingEntryInput import Handler #Calculate
 
 class MainWindow(ttk.Frame):
 
-
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
@@ -14,7 +13,7 @@ class MainWindow(ttk.Frame):
         
         self.VALIDCHARS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ",", ".")
 
-        self._vcmd = (self.parent.register(self.onvalidate), self.VALIDCHARS, '%S', '%P')
+        self._vcmd = (parent.register(self.onvalidate), self.VALIDCHARS, '%S', '%P')
 
         self.style = StyleBs("darkly")
         self.style.configure('TButton', font=('Helvetica', 13), width = 6, heigth = 3,)
@@ -25,7 +24,8 @@ class MainWindow(ttk.Frame):
 
         # Placing main frame
         self.grid(row=0,column=0, sticky = "nsew") 
-        self.entry_sellprice = ttk.Entry(self,validatecommand=self._vcmd)
+        self.entry_sellprice = ttk.Entry(self,validate="key", validatecommand = self._vcmd)
+        #self.entry_sellprice.config(validate="key", validatecommand=(self._vcmd, '%P'))
         self.entry_buyprice = ttk.Entry(self)
         self.entry_profit = ttk.Entry(self)
         self.entry_profitpercent = ttk.Entry(self)
