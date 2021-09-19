@@ -1,16 +1,6 @@
 from tkinter import StringVar
 from Calculate import SteamProfitCalculator
 
-"""
-self.entry_sellprice 
-self.entry_buyprice 
-self.entry_profit 
-self.entry_profitpercent 
-self.entry_minsell4profit 
-self.entry_sell420pc 
-self.entry_sell450pc
-"""
-
 class ValuesTab:
     #FEE = 1.15
 
@@ -49,26 +39,24 @@ class Handler:
         self.checked_entries = ValuesTab()
         self.updated_entries = ValuesTab()
         self.handling_flag = False
-        self._r = root
+        self.root = root
         
 
     def getEntryVal(self,name):
-        return self._r.entries[name]["StringVar"].get()
+        return self.root.entries[name]["StringVar"].get()
     
     def setEntryVal(self,name,content = "",iffalse=False):
-        """ 
-        """
 
         if content == False and content != "":
             if iffalse != False:
-                self._r.entries[name]["StringVar"].set(iffalse)
+                self.root.entries[name]["StringVar"].set(iffalse)
         else:
-            self._r.entries[name]["StringVar"].set(content)
+            self.root.entries[name]["StringVar"].set(content)
 
     def do_actions(*args):
         pass 
 
-    def handleEntryChange(self,text_after,name,index,mode):           
+    def handleEntryChange(self,stringvar_after,name,index,mode):           
         if self.handling_flag == False: 
             """
             when handling input, text is inserted in the entries which is also noticed as entryChange event, so it would create infite loop of handling
@@ -76,9 +64,14 @@ class Handler:
             self.handling_flag = True
             self.last_entry_name = name
             self.updated_entries.add(name)
+
+            # Replacing "," with correct dot
+            text_after = stringvar_after.get()
+            text_after = text_after.replace(",",".")
+            self.setEntryVal(name,text_after) 
+            
             self.calculate_entries()
             self.handling_flag = False
-            
 
 
     def calculate_entries(self):

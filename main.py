@@ -3,7 +3,6 @@ from ttkbootstrap import Style as StyleBs
 import tkinter.ttk as ttk
 from HandlingEntryInput import Handler #Calculate
 
-
 class MainWindow(ttk.Frame):
 
     def __init__(self, parent, *args, **kwargs):
@@ -25,7 +24,6 @@ class MainWindow(ttk.Frame):
         # Placing main frame
         self.grid(row=0,column=0, sticky = "nsew") 
         self.entry_sellprice = ttk.Entry(self,validate="key", validatecommand = self._vcmd)
-        #self.entry_sellprice.config(validate="key", validatecommand=(self._vcmd, '%P'))
         self.entry_buyprice = ttk.Entry(self)
         self.entry_profit = ttk.Entry(self)
         self.entry_profitpercent = ttk.Entry(self)
@@ -150,9 +148,6 @@ class MainWindow(ttk.Frame):
 
         self.changeLabel("Sell Price: ","Buy Price: ","Profit:","Profit %: ","Not-lose price: ","Sell price for 20% profit: ","Sell price for 50% profit: ")
 
-        #self.entries["buyp"]["StringVar"].set("3")
-
-
     def changeLabel(self, sp = None, bp = None, profit = None, profpc = None, minsprofit = None, s20pc = None, s50pc = None):
         if sp != None:
             self.label_sellprice["text"] = sp
@@ -169,7 +164,7 @@ class MainWindow(ttk.Frame):
         if s50pc  != None:
             self.label_sell450pc["text"] = s50pc
     
-    def onvalidate(self, validchars, chars_to_validate, after_change, symbol_limit = False, dont_count = ('.'), dot = ".") : 
+    def onvalidate(self, validchars, chars_to_validate, after_change, symbol_limit = False, dont_count = '.', dot = ('.',',')) : 
         print("WORKING")
         is_dot_in_string = False
         for char in chars_to_validate : 
@@ -179,7 +174,7 @@ class MainWindow(ttk.Frame):
         dont_count_symbols = 0
         for ch in after_change:
             
-            if ch == dot:       
+            if ch in dot:       
                 # There can be only one dot in entry
                 if is_dot_in_string:
                     return False
@@ -188,13 +183,14 @@ class MainWindow(ttk.Frame):
 
             if ch in dont_count:
                 dont_count_symbols += 1
+            
 
         if symbol_limit not in (False,None):
             if len(after_change)-dont_count_symbols > symbol_limit:   
                 return False
         return True     
 
-#try:
+
 if __name__ ==  "__main__" : 
     mainwindows_args = {}
     root = tk.Tk()
@@ -204,6 +200,3 @@ if __name__ ==  "__main__" :
     root.title("Steam profit calculator")
     MainWindow(root, **mainwindows_args)
     root.mainloop() 
-
-#except Exception as e:
-#    print(e)
